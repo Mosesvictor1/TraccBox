@@ -10,28 +10,28 @@ const steps = [
     title: "Company Setup",
     description: "Set up your company profile, branding, and basic configurations.",
     icon: Building,
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?auto=format&fit=crop&q=80&w=400"
+    image: "assets/CompanySetup.png"
   },
   {
     number: 2,
     title: "Add Reps",
     description: "Invite your sales representatives and assign their roles and territories.",
     icon: Users,
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=400"
+    image: "assets/AddReps.png"
   },
   {
     number: 3,
     title: "Assign Tasks",
     description: "Create tasks and assign them to your team members based on priorities.",
     icon: ListCheck,
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?auto=format&fit=crop&q=80&w=400"
+    image: "assets/AssignTasks.png"
   },
   {
     number: 4,
     title: "Go Live",
     description: "Start tracking performances, collecting data, and optimizing your sales process.",
     icon: Rocket,
-    image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&q=80&w=400"
+    image: "assets/GoLive.png"
   }
 ];
 
@@ -65,7 +65,7 @@ const OnboardingSection = () => {
                           alt={step.title}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        
                         <div className="absolute bottom-4 left-4 text-white p-2">
                           <h4 className="text-lg font-semibold">{step.title}</h4>
                         </div>

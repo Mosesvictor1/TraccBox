@@ -111,7 +111,7 @@ const DemoSection = () => {
                 <p className="text-sm opacity-80">
                   "The demo was tailored to our industry's needs and showed us exactly how TraccBox would solve our specific challenges."
                 </p>
-                <p className="font-medium mt-2">— Sarah Johnson, Sales Director</p>
+                <p className="font-medium mt-2">— Victor Moses, Sales Director</p>
               </div>
             </div>
             

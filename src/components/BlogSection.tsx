@@ -8,21 +8,21 @@ const blogPosts = [
   {
     title: "5 Ways to Motivate Your Field Sales Team",
     summary: "Discover proven techniques to keep your sales representatives engaged and motivated while in the field.",
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
+    image: "assets/blog1.png",
     date: "May 10, 2025",
     readTime: "5 min read"
   },
   {
     title: "Leveraging Data Analytics for Better Sales Performance",
     summary: "Learn how to use data-driven insights to optimize your sales process and increase your team's effectiveness.",
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d",
+    image: "assets/blog2.png",
     date: "May 8, 2025",
     readTime: "7 min read"
   },
   {
     title: "The Future of Field Sales Technology",
     summary: "Explore upcoming trends in field sales technology and how they'll transform the industry in the coming years.",
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158",
+    image: "assets/blog3.png",
     date: "May 5, 2025",
     readTime: "6 min read"
   }
