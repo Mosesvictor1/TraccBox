@@ -43,25 +43,25 @@ const HeroSection = () => {
             <div className="relative">
               {/* Fancy 3D card effect */}
               <div className="absolute -inset-2 bg-gradient-to-r from-traccbox-300/30 to-traccbox-500/30 rounded-2xl blur-xl"></div>
-              <div className="relative bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-xl border border-white/50 perspective-card">
-                <div className="flex gap-6">
+              <div className="relative bg-white/90 backdrop-blur-sm p-2 md:p-6 rounded-xl shadow-xl border border-white/50 perspective-card">
+                <div className="flex flex-col md:flex-row gap-6  px-1">
                   {/* Person using the app */}
-                  <div className="w-1/3 relative">
+                  <div className="md:w-1/2 w-[98%] relative flex md:flex-col items-center md:items-start gap-2 ">
                     <img
                       src="assets/heroImg1.png"
                       alt="Sales professional using TraccBox"
-                      className="rounded-lg shadow-lg object-cover h-1/2"
+                      className="rounded-lg shadow-lg object-cover h-24 md:h-1/2 w-[50%] md:w-full"
                     />
                     <img
                       src="assets/heroImg2.png"
                       alt="Sales professional using TraccBox"
-                      className="rounded-lg shadow-lg object-cover h-1/2 mt-2"
+                      className="rounded-lg shadow-lg object-cover h-24 md:h-1/2 w-[50%] md:w-full md:mt-2"
                     />
                     <div className="absolute top-2 right-2 w-4 h-4 bg-green-500 rounded-full animate-pulse-soft"></div>
                   </div>
 
                   {/* App interface */}
-                  <div className="w-2/3">
+                  <div className="w-full md:w-2/2">
                     <div className="bg-gradient-to-br from-slate-50 to-white p-3 rounded-lg shadow-md">
                       <div className="flex justify-between items-center mb-3">
                         <div className="text-sm font-semibold text-traccbox-700">
@@ -108,7 +108,7 @@ const HeroSection = () => {
                   </div>
                 </div>
               </div>
-              <div className="absolute -bottom-4 -right-4 bg-traccbox-500 text-white p-4 rounded-lg shadow-lg animate-pulse-soft">
+              <div className="absolute -bottom-9 md:-bottom-4 -right-4 bg-traccbox-500 text-white p-4 rounded-lg shadow-lg animate-pulse-soft">
                 <span className="text-sm font-semibold">+28% Sales Growth</span>
               </div>
             </div>
