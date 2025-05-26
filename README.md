@@ -1,2 +1,2 @@
-Sales & Performance SaaS Platform
+# TraccBox – Internal Development
 A SaaS platform designed to help companies manage field sales teams, track performance, and gain actionable sales and marketing insights using GPS, AI analytics, and automated reporting.
