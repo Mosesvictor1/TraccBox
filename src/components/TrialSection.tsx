@@ -32,13 +32,13 @@ const TrialSection = () => {
       <div className="absolute inset-0 bg-blue-wave opacity-10"></div>
       <div className="container mx-auto px-4 relative">
         <div className="max-w-3xl mx-auto text-center text-white mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Start Your 14-Day Free Trial</h2>
-          <p className="text-lg opacity-90 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4" data-aos="fade-up">Start Your 14-Day Free Trial</h2>
+          <p className="text-lg opacity-90 mb-8" data-aos="fade-up">
             No credit card required. Get full access to all features during your trial.
           </p>
         </div>
         
-        <div className="max-w-lg mx-auto bg-white rounded-xl p-8 shadow-xl">
+        <div className="max-w-lg mx-auto bg-white rounded-xl p-8 shadow-xl" data-aos="zoom-in">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-gray-700 font-medium mb-2">Work Email</label>

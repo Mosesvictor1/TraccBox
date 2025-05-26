@@ -10,13 +10,14 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="w-full lg:w-1/2 text-center lg:text-left">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6 animate-fade-in">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6 " data-aos="fade-up">
               Track, Analyze, and Grow Sales Performance with
               <span className="text-traccbox-500"> TraccBox</span>
             </h1>
             <p
               className="text-gray-700 text-lg md:text-xl mb-8 max-w-xl mx-auto lg:mx-0 animate-fade-in"
               style={{ animationDelay: "0.2s" }}
+              data-aos="fade-up"
             >
               An all-in-one sales and analytics platform for field reps, team
               leads, and sales managers.
@@ -24,6 +25,7 @@ const HeroSection = () => {
             <div
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in"
               style={{ animationDelay: "0.4s" }}
+              data-aos="fade-up"
             >
               <Button className="bg-traccbox-500 hover:bg-traccbox-600 text-white px-6 py-6 text-lg rounded-full">
                 Start Free Trial
@@ -31,6 +33,7 @@ const HeroSection = () => {
               <Button
                 variant="outline"
                 className="border-traccbox-500 text-traccbox-500 hover:bg-traccbox-50 px-6 py-6 text-lg rounded-full"
+                data-aos="fade-up"
               >
                 Request Demo <ArrowRight size={18} className="ml-2" />
               </Button>
@@ -39,6 +42,7 @@ const HeroSection = () => {
           <div
             className="w-full lg:w-1/2 relative animate-fade-in"
             style={{ animationDelay: "0.6s" }}
+            data-aos="zoom-in"
           >
             <div className="relative">
               {/* Fancy 3D card effect */}
