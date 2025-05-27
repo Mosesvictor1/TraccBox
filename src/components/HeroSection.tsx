@@ -1,9 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import ThreeDBackground from "./ThreeDBackground";
 
 const HeroSection = () => {
+
+    const [currentDate, setCurrentDate] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      // If the day has changed, update state
+      if (now.getDate() !== currentDate.getDate()) {
+        setCurrentDate(now);
+      }
+    }, 60000); // check every 60 seconds
+
+    return () => clearInterval(interval);
+  }, [currentDate]);
+
+  const formattedDate = currentDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+
+
   return (
     <section className="pt-24 md:pt-32 relative overflow-hidden">
       <ThreeDBackground className="z-0" />
@@ -72,7 +95,7 @@ const HeroSection = () => {
                           Today's Performance
                         </div>
                         <div className="text-xs text-gray-500">
-                          May 19, 2025
+                          {formattedDate}
                         </div>
                       </div>
 
