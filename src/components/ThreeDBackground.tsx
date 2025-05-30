@@ -14,6 +14,7 @@ const ThreeDBackground: React.FC<ThreeDBackgroundProps> = ({ className }) => {
       
       {/* 3D-like elements */}
       <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-white/30 rounded-xl rotate-12 backdrop-blur-sm border border-white/20 shadow-xl"></div>
+      
       <div className="absolute bottom-1/3 left-1/3 w-24 h-24 bg-white/20 rounded-xl -rotate-12 backdrop-blur-sm border border-white/10 shadow-lg"></div>
       
       {/* Grid pattern */}
