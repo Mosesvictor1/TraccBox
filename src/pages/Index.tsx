@@ -29,10 +29,10 @@ const Index = () => {
         <PricingSection />
         <TrialSection />
         <OnboardingSection />
-        {/* <AboutSection />
+        <AboutSection />
         <DemoSection />
         <BlogSection />
-        <ContactSection /> */}
+        <ContactSection />
       </main>
       <Footer />
     </div>

@@ -72,9 +72,9 @@ const DemoSection = () => {
   return (
     <section className="py-24 bg-blue-wave-bottom bg-no-repeat bg-top bg-cover">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden">
+        <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-xl overflow-hidden" data-aos="fade-up">
           <div className="grid grid-cols-1 md:grid-cols-2">
-            <div className="bg-gradient-to-br from-traccbox-500 to-traccbox-700 p-8 text-white">
+            <div className="bg-gradient-to-br from-traccbox-500 to-traccbox-700 p-8 text-white" data-aos="zoom-in">
               <div className="flex items-center mb-6">
                 <Calendar className="mr-3" size={24} />
                 <h3 className="text-2xl font-bold">Schedule a Demo</h3>
@@ -115,7 +115,7 @@ const DemoSection = () => {
               </div>
             </div>
             
-            <div className="p-8">
+            <div className="p-8" data-aos="zoom-in">
               <h4 className="text-xl font-semibold mb-6">Book Your Demo Session</h4>
               
               <form onSubmit={handleSubmit} className="space-y-5">

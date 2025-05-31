@@ -8,37 +8,37 @@ const AboutSection = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto">
           <div className="flex justify-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-traccbox-50 text-traccbox-500">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-traccbox-50 text-traccbox-500" data-aos="zoom-in">
               <Users size={28} />
             </div>
           </div>
           
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Why We Built TraccBox</h2>
-            <p className="text-gray-600 text-lg leading-relaxed mb-6">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6" data-aos="fade-up">Why We Built TraccBox</h2>
+            <p className="text-gray-600 text-lg leading-relaxed mb-6" data-aos="fade-up">
               TraccBox was born from a simple observation: field sales teams have unique challenges that traditional CRMs don't address. We saw sales managers struggling with visibility into their field reps' activities, and reps spending too much time on paperwork rather than selling.
             </p>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-lg leading-relaxed" data-aos="fade-up">
               Our mission is to empower field sales organizations with the tools they need to track activities, analyze performance, and ultimately grow their business through data-driven decisions.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center">
+            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center" data-aos="zoom-in">
               <h3 className="text-xl font-semibold mb-3 text-traccbox-500">Our Vision</h3>
               <p className="text-gray-600">
                 To revolutionize how field sales teams operate through intuitive technology that enhances productivity and transparency.
               </p>
             </div>
             
-            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center">
+            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center" data-aos="zoom-in">
               <h3 className="text-xl font-semibold mb-3 text-traccbox-500">Our Values</h3>
               <p className="text-gray-600">
                 Simplicity, transparency, and data-driven decision making are at the core of everything we do at TraccBox.
               </p>
             </div>
             
-            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center">
+            <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 text-center" data-aos="zoom-in">
               <h3 className="text-xl font-semibold mb-3 text-traccbox-500">Our Promise</h3>
               <p className="text-gray-600">
                 To continuously evolve our platform based on customer feedback and industry best practices.
