@@ -4,8 +4,7 @@ import { ArrowRight } from "lucide-react";
 import ThreeDBackground from "./ThreeDBackground";
 
 const HeroSection = () => {
-
-    const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -25,15 +24,16 @@ const HeroSection = () => {
     day: "numeric",
   });
 
-
-
   return (
     <section className="pt-24 md:pt-32 relative overflow-hidden">
       <ThreeDBackground className="z-0" />
       <div className="container mx-auto px-4 md:px-6 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="w-full lg:w-1/2 text-center lg:text-left">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6 " data-aos="fade-up">
+            <h1
+              className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight mb-6 "
+              data-aos="fade-up"
+            >
               Track, Analyze, and Grow Sales Performance with
               <span className="text-traccbox-500"> TraccBox</span>
             </h1>
