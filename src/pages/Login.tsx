@@ -14,7 +14,7 @@ const Login = () => {
         />
       </div>
       {/* Right Form */}
-      <div className="flex flex-1 h-full  w-1/2 items-center justify-center p-0">
+      <div className="flex flex-1 h-full w-full   md:w-1/2 items-center justify-center p-4">
         <div className="w-full max-w-xl mx-auto flex flex-col justify-center h-full">
           <div className="flex flex-col items-center mb-8">
             <Link to="/">

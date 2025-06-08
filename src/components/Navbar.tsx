@@ -74,18 +74,17 @@ const Navbar = () => {
 
         <div className="hidden md:flex items-center space-x-4">
           <Link to="/login">
-          <Button
-            variant="ghost"
-            className="hover:text-traccbox-500 hover:bg-transparent"
-            
-          >
-            Sign In
-          </Button>
+            <Button
+              variant="ghost"
+              className="hover:text-traccbox-500 hover:bg-transparent"
+            >
+              Sign In
+            </Button>
           </Link>
           <Link to="/signup">
-          <Button className="bg-traccbox-500 hover:bg-traccbox-600 text-white">
-            Get Started
-          </Button>
+            <Button className="bg-traccbox-500 hover:bg-traccbox-600 text-white">
+              Get Started
+            </Button>
           </Link>
         </div>
 
@@ -143,12 +142,16 @@ const Navbar = () => {
             Contact
           </a>
           <div className="flex flex-col space-y-2 pt-2">
-            <Button variant="ghost" className="justify-center">
-              Sign In
-            </Button>
-            <Button className="bg-traccbox-500 hover:bg-traccbox-600 text-white justify-center">
-              Get Started
-            </Button>
+            <Link to="/login">
+              <Button variant="ghost" className="justify-center border border-traccbox-500 w-full">
+                Sign In
+              </Button>
+            </Link>
+            <Link to="/signup">
+              <Button className="bg-traccbox-500 hover:bg-traccbox-600 text-white justify-center w-full">
+                Get Started
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

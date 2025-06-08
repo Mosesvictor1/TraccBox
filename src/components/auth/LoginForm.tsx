@@ -46,7 +46,8 @@ const LoginForm: React.FC = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* Email */}
         <FormField
           control={form.control}
           name="email"
@@ -56,12 +57,19 @@ const LoginForm: React.FC = () => {
                 Email Address <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="you@company.com" type="email" {...field} />
+                <Input
+                  placeholder="you@company.com"
+                  type="email"
+                  {...field}
+                  className="w-full"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
+        {/* Password */}
         <FormField
           control={form.control}
           name="password"
@@ -76,10 +84,11 @@ const LoginForm: React.FC = () => {
                     placeholder="Enter your password"
                     type={showPassword ? "text" : "password"}
                     {...field}
+                    className="w-full pr-10"
                   />
                   <button
                     type="button"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 focus:outline-none"
                     tabIndex={-1}
                     onClick={() => setShowPassword((v) => !v)}
                   >
@@ -91,7 +100,9 @@ const LoginForm: React.FC = () => {
             </FormItem>
           )}
         />
-        <div className="flex items-center justify-between">
+
+        {/* Remember + Forgot Password */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
           <FormField
             control={form.control}
             name="remember"
@@ -120,9 +131,11 @@ const LoginForm: React.FC = () => {
             Forgot password?
           </Link>
         </div>
+
+        {/* Submit Button */}
         <Button
           type="submit"
-          className="w-full bg-traccbox-500 hover:bg-traccbox-600 text-white"
+          className="w-full bg-traccbox-500 hover:bg-traccbox-600 text-white text-base font-medium py-2.5"
           disabled={loading}
         >
           {loading ? "Signing In..." : "Sign In"}

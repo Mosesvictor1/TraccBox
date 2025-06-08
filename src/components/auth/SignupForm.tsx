@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -19,7 +19,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Selects from "react-select";
 
+import countryList from "react-select-country-list";
 const companyTypes = [
   "Logistics",
   "Real estate",
@@ -36,8 +38,8 @@ const companyTypes = [
 
 const signupSchema = z
   .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
+    // firstName: z.string().min(1, "First name is required"),
+    // lastName: z.string().min(1, "Last name is required"),
     email: z.string().email("Invalid email address"),
     company: z.string().min(1, "Company name is required"),
     companyType: z.string().min(1, "Company type is required"),
@@ -59,11 +61,13 @@ interface SignupFormProps {
 
 const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
   const [loading, setLoading] = useState(false);
+  const options = useMemo(() => countryList().getData(), []);
+
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      // firstName: "",
+      // lastName: "",
       email: "",
       company: "",
       companyType: "",
@@ -77,6 +81,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
   const onSubmit = async (values: SignupFormValues) => {
     setLoading(true);
     // TODO: Call API here
+    console.log("mmmm", values);
     setTimeout(() => {
       setLoading(false);
       if (onSuccess) onSuccess();
@@ -86,6 +91,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+        
         {/* <div className="flex gap-4">
           <FormField
             control={form.control}
@@ -118,6 +124,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
             )}
           />
         </div> */}
+
         <FormField
           control={form.control}
           name="company"
@@ -190,6 +197,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="country"
@@ -199,12 +207,18 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
                 Country / Region <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="Enter country or region" {...field} />
+                <Selects
+                  options={options}
+                  value={options.find((opt) => opt.label === field.value)}
+                  onChange={(val) => field.onChange(val?.label ?? "")}
+                  classNamePrefix="react-select"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="password"
