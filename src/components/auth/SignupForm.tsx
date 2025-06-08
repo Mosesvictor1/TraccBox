@@ -21,14 +21,16 @@ import {
 } from "@/components/ui/select";
 
 const companyTypes = [
-  "FMCG",
-  "Pharma",
-  "Real Estate",
-  "Insurance",
-  "Manufacturing",
-  "Technology",
-  "Healthcare",
+  "Logistics",
+  "Real estate",
   "Retail",
+  "FMCG",
+  "Pharmaceutical",
+  "Insurance",
+  "Financial services/Fintech",
+  "Telecommunication",
+  "Security agencies",
+  "Oil and Gas distribution",
   "Other",
 ];
 
@@ -84,7 +86,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <div className="flex gap-4">
+        {/* <div className="flex gap-4">
           <FormField
             control={form.control}
             name="firstName"
@@ -115,22 +117,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
               </FormItem>
             )}
           />
-        </div>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Work Email <span className="text-red-500">*</span>
-              </FormLabel>
-              <FormControl>
-                <Input placeholder="you@company.com" type="email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        </div> */}
         <FormField
           control={form.control}
           name="company"
@@ -146,6 +133,22 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
             </FormItem>
           )}
         />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Business Email <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="you@company.com" type="email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="companyType"
