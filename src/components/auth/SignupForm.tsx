@@ -12,6 +12,25 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+const companyTypes = [
+  "FMCG",
+  "Pharma",
+  "Real Estate",
+  "Insurance",
+  "Manufacturing",
+  "Technology",
+  "Healthcare",
+  "Retail",
+  "Other",
+];
 
 const signupSchema = z
   .object({
@@ -19,6 +38,9 @@ const signupSchema = z
     lastName: z.string().min(1, "Last name is required"),
     email: z.string().email("Invalid email address"),
     company: z.string().min(1, "Company name is required"),
+    companyType: z.string().min(1, "Company type is required"),
+    businessAddress: z.string().min(1, "Business address is required"),
+    country: z.string().min(1, "Country is required"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string(),
   })
@@ -42,6 +64,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
       lastName: "",
       email: "",
       company: "",
+      companyType: "",
+      businessAddress: "",
+      country: "",
       password: "",
       confirmPassword: "",
     },
@@ -115,7 +140,63 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
                 Company Name <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input placeholder="company Name" {...field} />
+                <Input placeholder="Company Name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="companyType"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Company Type/Industry <span className="text-red-500">*</span>
+              </FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select company type" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {companyTypes.map((type) => (
+                    <SelectItem key={type} value={type}>
+                      {type}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="businessAddress"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Business Address <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="Enter business address" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="country"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>
+                Country / Region <span className="text-red-500">*</span>
+              </FormLabel>
+              <FormControl>
+                <Input placeholder="Enter country or region" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

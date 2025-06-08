@@ -67,11 +67,9 @@ const AboutSection = () => {
                 Our Values
               </h3>
               <p className="text-gray-600">
-                For core Values accountability is the best because it aligns
-                well with your target audience core values. But the is the
-                refined one: We believe that every sale, every action, and every
-                outcome should be traceable because true accountability powers
-                smarter teams, stronger strategies, and sustainable growth.
+                We believe that every sale, every action, and every outcome
+                should be traceable because true accountability powers smarter
+                teams, stronger strategies, and sustainable growth.
               </p>
             </div>
 
