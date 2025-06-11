@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import {
   Form,
   FormField,
@@ -20,6 +21,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Selects from "react-select";
+import { toast } from "sonner";
 
 import countryList from "react-select-country-list";
 const companyTypes = [
@@ -61,6 +63,7 @@ interface SignupFormProps {
 
 const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const options = useMemo(() => countryList().getData(), []);
 
   const form = useForm<SignupFormValues>({
@@ -80,18 +83,26 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
 
   const onSubmit = async (values: SignupFormValues) => {
     setLoading(true);
-    // TODO: Call API here
-    console.log("mmmm", values);
-    setTimeout(() => {
+    try {
+      // TODO: Implement API call to register user
+      // const response = await registerUser(values);
+
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      toast.success("Account created successfully! Please verify your email.");
+      // Redirect to verification page with email
+      navigate(`/verify?email=${encodeURIComponent(values.email)}`);
+    } catch (error) {
+      toast.error("Failed to create account. Please try again.");
+    } finally {
       setLoading(false);
-      if (onSuccess) onSuccess();
-    }, 1000);
+    }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        
         {/* <div className="flex gap-4">
           <FormField
             control={form.control}

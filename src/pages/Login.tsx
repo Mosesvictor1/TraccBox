@@ -32,14 +32,16 @@ const Login = () => {
             </p>
           </div>
           <LoginForm />
-          <div className="mt-6 text-center text-sm text-gray-600">
-            Don't have an account?{" "}
-            <Link
-              to="/signup"
-              className="text-traccbox-500 font-medium hover:underline"
-            >
-              Sign Up
-            </Link>
+          <div className="mt-6 text-center space-y-2">
+            <div className="text-sm text-gray-600">
+              Don't have an account?{" "}
+              <Link
+                to="/signup"
+                className="text-traccbox-500 font-medium hover:underline"
+              >
+                Sign Up
+              </Link>
+            </div>
           </div>
         </div>
       </div>

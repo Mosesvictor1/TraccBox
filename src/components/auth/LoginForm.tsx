@@ -125,7 +125,7 @@ const LoginForm: React.FC = () => {
             )}
           />
           <Link
-            to="#"
+            to="/forgot-password"
             className="text-traccbox-500 text-sm font-medium hover:underline"
           >
             Forgot password?
