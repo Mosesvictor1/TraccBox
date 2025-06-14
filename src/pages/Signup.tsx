@@ -6,11 +6,11 @@ const Signup = () => {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white">
       {/* Left Illustration */}
-      <div className="hidden md:flex w-[48%] items-center justify-center bg-[#F8FAFC]">
+      <div className="hidden md:flex w-[48%] items-center justify-cente bg-[#F8FAFC]">
         <img
           src="/assets/SignUp.png"
           alt="Sign up illustration"
-          className="max-w-full h-screen object-contain"
+          className="max-w-full w-full h-screen object-cover"
         />
       </div>
       {/* Right Form */}
