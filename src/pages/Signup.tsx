@@ -10,7 +10,7 @@ const Signup = () => {
         <img
           src="/assets/SignUp.png"
           alt="Sign up illustration"
-          className="max-w-[95%] h-auto object-contain"
+          className="max-w-full h-screen object-contain"
         />
       </div>
       {/* Right Form */}
