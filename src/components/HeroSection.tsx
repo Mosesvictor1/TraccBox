@@ -43,8 +43,9 @@ const HeroSection = () => {
               style={{ animationDelay: "0.2s" }}
               data-aos="fade-up"
             >
-              An all-in-one sales and analytics platform for field reps, team
-              leads, and sales managers.
+              An all-in-one solution that combines location tracking, sales
+              analytics, and marketing attribution for field reps, team leads,
+              and sales managers.
             </p>
             <div
               className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start animate-fade-in"

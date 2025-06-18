@@ -29,7 +29,7 @@ const features = [
     title: "MOQ Management",
     icon: Activity,
     description:
-      "Set minimum order quantity based on sales trends to avoid Overstocking.",
+      "Ascertain minimum order quantity based on sales trends to avoid overstocking.",
   },
   {
     title: "Sales Leaderboards",
