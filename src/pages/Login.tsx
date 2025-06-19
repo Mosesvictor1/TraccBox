@@ -6,11 +6,11 @@ const Login = () => {
   return (
     <div className="h-screen flex flex-col md:flex-row bg-white overflow-hidden">
       {/* Left Illustration */}
-      <div className="hidden md:flex w-[44%]  h-full items-center justify-start bg-[#F8FAFC]">
+      <div className="hidden md:flex w-[44%]  h-full items-center justify-start bg-[#cee0f2]">
         <img
-          src="/assets/login.png"
+          src="/assets/login1.png"
           alt="Login illustration"
-          className="max-w-[100%] w-full h-full"
+          className="max-w-[100%] w-full "
         />
       </div>
       {/* Right Form */}
