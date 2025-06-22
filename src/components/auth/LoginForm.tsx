@@ -14,7 +14,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthProvider";
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -25,7 +26,6 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const LoginForm: React.FC = () => {
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -35,13 +35,14 @@ const LoginForm: React.FC = () => {
       remember: false,
     },
   });
+  const navigate = useNavigate();
+  const { login, loading, error } = useAuth();
 
   const onSubmit = async (values: LoginFormValues) => {
-    setLoading(true);
-    // TODO: Call API here
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    const success = await login(values.email, values.password);
+    if (success) {
+      navigate("/dashboard"); // Redirect to dashboard
+    }
   };
 
   return (
@@ -100,6 +101,13 @@ const LoginForm: React.FC = () => {
             </FormItem>
           )}
         />
+
+        {/* Error Message */}
+        {error && (
+          <div className="text-red-500 text-sm text-center font-medium">
+            {error}
+          </div>
+        )}
 
         {/* Remember + Forgot Password */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
