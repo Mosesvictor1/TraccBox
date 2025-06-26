@@ -8,7 +8,7 @@ import {
   VerifyEmailParams,
 } from "./types";
 
-const API_BASE = "https://fastapi.tests.com.ng/api/v1";
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 export async function registerCompany(data: RegisterRequest) {
   const res = await axios.post<RegisterCompanyResponse>(
@@ -31,6 +31,32 @@ export async function resendVerification(data: ResendVerificationRequest) {
 export async function verifyEmail(params: VerifyEmailParams) {
   const res = await axios.post(
     `${API_BASE}/companies/verify_email?id=${params.id}&token=${params.token}`
+  );
+  return res.data;
+}
+
+export async function forgottenPasswordRequest(email: string) {
+  const res = await axios.post(
+    `${API_BASE}/companies/forgotten_password`,
+    null,
+    {
+      params: { email },
+    }
+  );
+  return res.data;
+}
+
+export async function forgottenPasswordUpdate(
+  email: string,
+  reset_token: string,
+  password: string
+) {
+  const res = await axios.patch(
+    `${API_BASE}/companies/forgotten_password`,
+    null,
+    {
+      params: { email, reset_token, password },
+    }
   );
   return res.data;
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { forgottenPasswordRequest } from "@/api/auth";
+import type { AxiosError } from "axios";
 
 const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -24,8 +26,9 @@ type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", ""]);
   const [email, setEmail] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(0);
   const navigate = useNavigate();
 
   const form = useForm<ForgotPasswordFormValues>({
@@ -35,6 +38,16 @@ const ForgotPassword = () => {
     },
   });
 
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(
+        () => setResendCooldown(resendCooldown - 1),
+        1000
+      );
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
+
   const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) return;
 
@@ -43,7 +56,7 @@ const ForgotPassword = () => {
     setOtp(newOtp);
 
     // Auto-focus next input
-    if (value && index < 5) {
+    if (value && index < 3) {
       const nextInput = document.querySelector(`input[name=otp-${index + 1}]`);
       if (nextInput instanceof HTMLElement) {
         nextInput.focus();
@@ -66,54 +79,70 @@ const ForgotPassword = () => {
   const onSubmit = async (values: ForgotPasswordFormValues) => {
     setLoading(true);
     try {
-      // TODO: Implement API call to send OTP
-      // await sendResetPasswordOTP(values.email);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      const res = await forgottenPasswordRequest(values.email);
       setEmail(values.email);
       setOtpSent(true);
-      toast.success("OTP sent to your email!");
-    } catch (error) {
-      toast.error("Failed to send OTP. Please try again.");
+      console.log("forgot ===", res);
+      toast.success("Verification code sent to your email!", {
+        position: "top-center",
+      });
+    } catch (error: unknown) {
+      let message = "Failed to send verification code. Please try again.";
+      if (
+        error &&
+        typeof error === "object" &&
+        (error as AxiosError).isAxiosError
+      ) {
+        const axiosError = error as AxiosError<{ detail?: string }>;
+        if (axiosError.response?.data?.detail) {
+          const detail = axiosError.response.data.detail;
+          message = detail.includes(":")
+            ? detail.split(":").pop()!.trim()
+            : detail;
+        }
+      }
+      toast.error(message, { position: "top-center" });
     } finally {
       setLoading(false);
     }
   };
 
   const handleVerifyOTP = async () => {
-    setLoading(true);
-    try {
-      const otpString = otp.join("");
-      // TODO: Implement API call to verify OTP
-      // await verifyResetPasswordOTP({ email, otp: otpString });
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Navigate to reset password page with email
-      navigate(`/reset-password?email=${encodeURIComponent(email)}`);
-    } catch (error) {
-      toast.error("Invalid OTP. Please try again.");
-    } finally {
-      setLoading(false);
-    }
+    // No API call, just navigate with email and otp as reset_token
+    const otpString = otp.join("");
+    navigate(
+      `/reset-password?email=${encodeURIComponent(
+        email
+      )}&reset_token=${encodeURIComponent(otpString)}`
+    );
   };
 
   const handleResendOTP = async () => {
     setLoading(true);
     try {
-      // TODO: Implement API call to resend OTP
-      // await resendResetPasswordOTP(email);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("OTP resent successfully!");
-      setOtp(["", "", "", "", "", ""]);
-    } catch (error) {
-      toast.error("Failed to resend OTP. Please try again.");
+      const res = await forgottenPasswordRequest(email);
+      console.log(res);
+      toast.success("Verification code resent successfully!", {
+        position: "top-center",
+      });
+      setOtp(["", "", "", ""]);
+      setResendCooldown(30); // 30 seconds cooldown
+    } catch (error: unknown) {
+      let message = "Failed to resend verification code. Please try again.";
+      if (
+        error &&
+        typeof error === "object" &&
+        (error as AxiosError).isAxiosError
+      ) {
+        const axiosError = error as AxiosError<{ detail?: string }>;
+        if (axiosError.response?.data?.detail) {
+          const detail = axiosError.response.data.detail;
+          message = detail.includes(":")
+            ? detail.split(":").pop()!.trim()
+            : detail;
+        }
+      }
+      toast.error(message, { position: "top-center" });
     } finally {
       setLoading(false);
     }
@@ -146,7 +175,7 @@ const ForgotPassword = () => {
             </h1>
             <p className="text-gray-500 text-center text-base">
               {otpSent
-                ? `Enter the 6-digit code sent to ${email}`
+                ? `Enter the 4-digit code sent to ${email}`
                 : "Enter your email address and we'll send you a verification code"}
             </p>
           </div>
@@ -218,9 +247,11 @@ const ForgotPassword = () => {
                   type="button"
                   onClick={handleResendOTP}
                   className="text-sm text-traccbox-500 hover:text-traccbox-600"
-                  disabled={loading}
+                  disabled={loading || resendCooldown > 0}
                 >
-                  Didn't receive the code? Resend
+                  {resendCooldown > 0
+                    ? `Resend available in ${resendCooldown}s`
+                    : "Didn't receive the code? Resend"}
                 </button>
               </div>
             </div>

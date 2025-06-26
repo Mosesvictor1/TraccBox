@@ -14,6 +14,8 @@ import { Button } from "@/components/ui/button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
+import { registerCompany } from "@/api/auth";
+import type { AxiosError } from "axios";
 
 const signupSchema = z
   .object({
@@ -34,6 +36,7 @@ interface SignupFormProps {
 
 const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
   const [loading, setLoading] = useState(false);
+  const [formError, setFormError] = useState("");
   const navigate = useNavigate();
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -46,18 +49,39 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
 
   const onSubmit = async (values: SignupFormValues) => {
     setLoading(true);
+    setFormError("");
     try {
-      // TODO: Implement API call to register user
-      // const response = await registerUser(values);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("Account created successfully! Please verify your email.");
-      // Redirect to verification page with email
-      navigate(`/verify?email=${encodeURIComponent(values.email)}`);
-    } catch (error) {
-      toast.error("Failed to create account. Please try again.");
+      const res = await registerCompany({
+        email: values.email,
+        password: values.password,
+      });
+      console.log(res);
+      toast.success("Account created successfully! Please verify your email.", {
+        position: "top-center",
+      });
+      navigate(
+        `/verify?email=${encodeURIComponent(
+          values.email
+        )}&id=${encodeURIComponent(res.company.id)}`
+      );
+    } catch (error: unknown) {
+      let message = "Failed to create account. Please try again.";
+      console.log("error==", error);
+      if (
+        error &&
+        typeof error === "object" &&
+        (error as AxiosError).isAxiosError
+      ) {
+        const axiosError = error as AxiosError<{ detail?: string }>;
+        if (axiosError.response?.data?.detail) {
+          const detail = axiosError.response.data.detail;
+          message = detail.includes(":")
+            ? detail.split(":").pop()!.trim()
+            : detail;
+        }
+      }
+      setFormError(message);
+      toast.error(message, { position: "top-center" });
     } finally {
       setLoading(false);
     }
@@ -136,6 +160,11 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
         >
           {loading ? "Creating Account..." : "Create Account"}
         </Button>
+        {formError && (
+          <div className="text-red-600 text-sm mt-2 text-center">
+            {formError}
+          </div>
+        )}
       </form>
     </Form>
   );

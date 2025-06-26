@@ -3,19 +3,34 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { verifyEmail, resendVerification } from "@/api/auth";
+import type { AxiosError } from "axios";
 
 const Verification = () => {
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", ""]);
   const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const email = searchParams.get("email");
+  const id = searchParams.get("id");
+  const [formError, setFormError] = useState("");
+  const [resendCooldown, setResendCooldown] = useState(0);
 
   useEffect(() => {
     if (!email) {
       navigate("/signup");
     }
   }, [email, navigate]);
+
+  useEffect(() => {
+    if (resendCooldown > 0) {
+      const timer = setTimeout(
+        () => setResendCooldown(resendCooldown - 1),
+        1000
+      );
+      return () => clearTimeout(timer);
+    }
+  }, [resendCooldown]);
 
   const handleOtpChange = (index: number, value: string) => {
     if (value.length > 1) return;
@@ -25,7 +40,7 @@ const Verification = () => {
     setOtp(newOtp);
 
     // Auto-focus next input
-    if (value && index < 5) {
+    if (value && index < 3) {
       const nextInput = document.querySelector(`input[name=otp-${index + 1}]`);
       if (nextInput instanceof HTMLElement) {
         nextInput.focus();
@@ -48,35 +63,68 @@ const Verification = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-
+    setFormError("");
     try {
       const otpString = otp.join("");
-      // TODO: Implement API call to verify OTP
-      // const response = await verifyEmail({ email, otp: otpString });
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("Email verified successfully!");
+      if (!id) throw new Error("Missing verification id.");
+      const res = await verifyEmail({ id, token: otpString });
+      console.log("res==", res);
+      toast.success("Email verified successfully!", { position: "top-center" });
       navigate("/login");
-    } catch (error) {
-      toast.error("Invalid verification code. Please try again.");
+    } catch (error: unknown) {
+      let message = "Invalid verification code. Please try again.";
+      console.log("error==", error);
+      if (
+        error &&
+        typeof error === "object" &&
+        (error as AxiosError).isAxiosError
+      ) {
+        const axiosError = error as AxiosError<{ detail?: string }>;
+        if (axiosError.response?.data?.detail) {
+          const detail = axiosError.response.data.detail;
+          message = detail.includes(":")
+            ? detail.split(":").pop()!.trim()
+            : detail;
+        }
+      }
+      setFormError(message);
+      toast.error(message, { position: "top-center" });
     } finally {
       setLoading(false);
     }
   };
 
   const handleResendCode = async () => {
+    if (!email || resendCooldown > 0) return;
+    setLoading(true);
+    setFormError("");
     try {
-      // TODO: Implement API call to resend verification code
-      // await resendVerificationCode(email);
-
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("Verification code resent successfully!");
-    } catch (error) {
-      toast.error("Failed to resend verification code. Please try again.");
+      const res = await resendVerification({ email });
+      setResendCooldown(30); // 30 seconds cooldown
+      setOtp(["", "", "", ""]); // Reset OTP inputs
+      toast.success("Verification code resent successfully!", {
+        position: "top-center",
+      });
+    } catch (error: unknown) {
+      let message = "Failed to resend verification code. Please try again.";
+      console.log("error==", error);
+      if (
+        error &&
+        typeof error === "object" &&
+        (error as AxiosError).isAxiosError
+      ) {
+        const axiosError = error as AxiosError<{ detail?: string }>;
+        if (axiosError.response?.data?.detail) {
+          const detail = axiosError.response.data.detail;
+          message = detail.includes(":")
+            ? detail.split(":").pop()!.trim()
+            : detail;
+        }
+      }
+      setFormError(message);
+      toast.error(message, { position: "top-center" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -109,6 +157,11 @@ const Verification = () => {
               />
             ))}
           </div>
+          {formError && (
+            <div className="text-red-600 text-sm mt-2 text-center">
+              {formError}
+            </div>
+          )}
           <div>
             <Button
               type="submit"
@@ -123,8 +176,11 @@ const Verification = () => {
               type="button"
               onClick={handleResendCode}
               className="text-sm text-traccbox-500 hover:text-traccbox-600"
+              disabled={loading || resendCooldown > 0}
             >
-              Didn't receive the code? Resend
+              {resendCooldown > 0
+                ? `Resend available in ${resendCooldown}s`
+                : "Didn't receive the code? Resend"}
             </button>
           </div>
         </form>

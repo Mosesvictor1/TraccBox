@@ -14,6 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { forgottenPasswordUpdate } from "@/api/auth";
+import type { AxiosError } from "axios";
+import { Eye, EyeOff } from "lucide-react";
 
 const resetPasswordSchema = z
   .object({
@@ -32,6 +35,9 @@ const ResetPassword = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const email = searchParams.get("email");
+  const reset_token = searchParams.get("reset_token");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const form = useForm<ResetPasswordFormValues>({
     resolver: zodResolver(resetPasswordSchema),
@@ -42,23 +48,44 @@ const ResetPassword = () => {
   });
 
   const onSubmit = async (values: ResetPasswordFormValues) => {
-    if (!email) {
+    if (!email || !reset_token) {
       toast.error("Invalid reset session");
       return;
     }
 
     setLoading(true);
     try {
-      // TODO: Implement API call to reset password
-      // await resetPassword({ email, password: values.password });
+      const res = await forgottenPasswordUpdate(
+        email,
+        reset_token,
+        values.password
+      );
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      toast.success("Password reset successfully!");
+      toast.success("Password reset successfully!", { position: "top-center" });
       navigate("/login");
-    } catch (error) {
-      toast.error("Failed to reset password. Please try again.");
+    } catch (error: unknown) {
+      let message = "Failed to reset password. Please try again.";
+      console.log(error);
+      if (
+        error &&
+        typeof error === "object" &&
+        (error as AxiosError).isAxiosError
+      ) {
+        const axiosError = error as AxiosError<{ detail?: string }>;
+        if (axiosError.response?.data?.detail) {
+          const detail = axiosError.response.data.detail;
+          message = detail.includes(":")
+            ? detail.split(":").pop()!.trim()
+            : detail;
+        }
+      }
+      toast.error(message, { position: "top-center" });
+      if (
+        message.toLowerCase().includes("token") ||
+        message.trim().toLowerCase() === "reset password failed"
+      ) {
+        setTimeout(() => navigate("/forgot-password"), 1500);
+      }
     } finally {
       setLoading(false);
     }
@@ -126,11 +153,25 @@ const ResetPassword = () => {
                       New Password <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Enter new password"
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Enter new password"
+                          {...field}
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 focus:outline-none"
+                          tabIndex={-1}
+                          onClick={() => setShowPassword((v) => !v)}
+                        >
+                          {showPassword ? (
+                            <EyeOff size={18} />
+                          ) : (
+                            <Eye size={18} />
+                          )}
+                        </button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -146,11 +187,25 @@ const ResetPassword = () => {
                       Confirm Password <span className="text-red-500">*</span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Confirm new password"
-                        {...field}
-                      />
+                      <div className="relative">
+                        <Input
+                          type={showConfirmPassword ? "text" : "password"}
+                          placeholder="Confirm new password"
+                          {...field}
+                        />
+                        <button
+                          type="button"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 focus:outline-none"
+                          tabIndex={-1}
+                          onClick={() => setShowConfirmPassword((v) => !v)}
+                        >
+                          {showConfirmPassword ? (
+                            <EyeOff size={18} />
+                          ) : (
+                            <Eye size={18} />
+                          )}
+                        </button>
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
