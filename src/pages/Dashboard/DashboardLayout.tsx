@@ -1,6 +1,6 @@
 import React from "react";
 import Topbar from "./Topbar";
-import Sidebar from "./Sidebar";
+import Sidebar from "./Sidebar/Sidebar";
 
 const DashboardLayout: React.FC<{ children: React.ReactNode }> = ({
   children,

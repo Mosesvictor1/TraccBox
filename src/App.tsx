@@ -14,6 +14,21 @@ import { AuthProvider } from "@/components/auth/AuthProvider";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import GlobalAuthRedirect from "@/components/auth/GlobalAuthRedirect";
+import GeneralSettings from "./pages/Dashboard/features/settings/GeneralSettings";
+import UserRoles from "./pages/Dashboard/features/settings/UserRoles";
+
+// Dashboard home content as a component
+const DashboardHome = () => (
+  <>
+    <h1 className="text-3xl font-bold mb-4">Welcome to your Dashboard</h1>
+    <p className="text-lg mb-2">
+      Hello, <span className="font-semibold">Welcome!</span>
+    </p>
+    <div className="mt-6 text-gray-500">
+      <p>dashboard Still on Progress......</p>
+    </div>
+  </>
+);
 
 const queryClient = new QueryClient();
 
@@ -33,7 +48,11 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route element={<ProtectedRoute />}>
-              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />}>
+                <Route index element={<DashboardHome />} />
+                <Route path="settings/general" element={<GeneralSettings />} />
+                <Route path="settings/roles" element={<UserRoles />} />
+              </Route>
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

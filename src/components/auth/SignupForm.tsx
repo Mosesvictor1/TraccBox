@@ -16,6 +16,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { registerCompany } from "@/api/auth";
 import type { AxiosError } from "axios";
+import { Eye, EyeOff } from "lucide-react";
 
 const signupSchema = z
   .object({
@@ -46,6 +47,8 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
       confirmPassword: "",
     },
   });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const onSubmit = async (values: SignupFormValues) => {
     setLoading(true);
@@ -114,11 +117,21 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
                 Create Password <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Min, 8 characters"
-                  type="password"
-                  {...field}
-                />
+                <div className="relative">
+                  <Input
+                    placeholder="Min, 8 characters"
+                    type={showPassword ? "text" : "password"}
+                    {...field}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 focus:outline-none"
+                    tabIndex={-1}
+                    onClick={() => setShowPassword((v) => !v)}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -133,11 +146,25 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess }) => {
                 Confirm Password <span className="text-red-500">*</span>
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder="Re-enter password"
-                  type="password"
-                  {...field}
-                />
+                <div className="relative">
+                  <Input
+                    placeholder="Re-enter password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    {...field}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 focus:outline-none"
+                    tabIndex={-1}
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff size={18} />
+                    ) : (
+                      <Eye size={18} />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

@@ -60,3 +60,19 @@ export async function forgottenPasswordUpdate(
   );
   return res.data;
 }
+
+export async function updateCompanyInfo(
+  company_id: string,
+  data: {
+    company_name: string;
+    company_industry: string;
+    phone_number: string;
+    address: string;
+    country: string;
+    logo_url?: string;
+  }
+) {
+  const res = await axios.put(`${API_BASE}/update/${company_id}`, data);
+  console.log("reeeeee=====", res)
+  return res.data;
+}
