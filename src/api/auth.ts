@@ -79,7 +79,9 @@ export async function updateCompanyInfo(
 }
 
 export async function getNewToken(refresh_token: string) {
-  const res = await axios.post(`${API_BASE}/refresh?refresh_token=${refresh_token}`);
+  const res = await axios.post(`${API_BASE}/api/v1/refresh`, {
+    refresh_token,
+  });
   console.log("res of New token=====", res);
   return res.data;
 }
