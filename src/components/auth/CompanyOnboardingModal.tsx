@@ -145,11 +145,11 @@ const CompanyOnboardingModal: React.FC = () => {
             Cookies.set(TOKEN_KEY, res.access_token, { expires: 7 }); // 7 days
           } catch (error) {
             console.log("newTokenError:", error);
-            alert(error);
+            alert(error.message || "Network Error Try Again");
           }
 
           toast.success(
-            resData.message || "Company ==)()updated successfully!",
+            resData.message || "Company updated successfully!",
             {
               position: "top-center",
             }
