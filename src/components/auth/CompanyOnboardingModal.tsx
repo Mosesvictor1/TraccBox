@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,11 +13,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import countryList from "react-select-country-list";
-import { updateCompanyInfo } from "@/api/auth";
+import { getNewToken, updateCompanyInfo } from "@/api/auth";
 import { useAuth } from "./AuthProvider";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import EmailVerificationModal from "./EmailVerificationModal";
+import Cookies from "js-cookie";
 
 const steps = [
   { label: "Company Details" },
@@ -50,7 +51,7 @@ const CompanyOnboardingModal: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(true);
   const [loading, setLoading] = useState(false); // Add loading state
   const countryOptions = countryList().getData();
-  const { user, setUser, logout } = useAuth();
+  const { user, setUser, logout, refreshToken, TOKEN_KEY, token } = useAuth();
   const navigate = useNavigate();
   const {
     register,
@@ -63,7 +64,7 @@ const CompanyOnboardingModal: React.FC = () => {
     mode: "onChange",
   });
 
-  if (user && user.verified_email === false && !emailJustVerified) {
+  if (user && user.verified_email === false) {
     return (
       <EmailVerificationModal
         open={true}
@@ -131,19 +132,28 @@ const CompanyOnboardingModal: React.FC = () => {
         const response = await updateCompanyInfo(user.id, payload);
         // Axios: response.data is the actual data object
         const resData = response.data || response;
-        console.log("Update response:", resData);
-
         if (
-          (response.status === 200 || response.status === undefined) &&
+          response.status === "success" &&
           resData &&
           ((typeof resData.status === "string" &&
             resData.status.toLowerCase() === "success") ||
             (typeof resData.message === "string" &&
               resData.message.toLowerCase().includes("success")))
         ) {
-          toast.success(resData.message || "Company updated successfully!", {
-            position: "top-center",
-          });
+          try {
+            const res = await getNewToken(refreshToken);
+            Cookies.set(TOKEN_KEY, res.access_token, { expires: 7 }); // 7 days
+          } catch (error) {
+            console.log("newTokenError:", error);
+            alert(error);
+          }
+
+          toast.success(
+            resData.message || "Company ==)()updated successfully!",
+            {
+              position: "top-center",
+            }
+          );
           setUser({ ...user, ...resData.company });
           setModalOpen(false);
         } else {

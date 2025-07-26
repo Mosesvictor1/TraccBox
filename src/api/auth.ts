@@ -20,6 +20,7 @@ export async function registerCompany(data: RegisterRequest) {
 
 export async function login(data: LoginRequest) {
   const res = await axios.post<LoginResponse>(`${API_BASE}/login`, data);
+  console.log("Login res==", res);
   return res.data;
 }
 
@@ -73,6 +74,13 @@ export async function updateCompanyInfo(
   }
 ) {
   const res = await axios.put(`${API_BASE}/update/${company_id}`, data);
-  console.log("reeeeee=====", res)
+  console.log("reeeeee=====", res);
   return res.data;
 }
+
+export async function getNewToken(refresh_token: string) {
+  const res = await axios.post(`${API_BASE}/refresh?refresh_token=${refresh_token}`);
+  console.log("res of New token=====", res);
+  return res.data;
+}
+// access_token"

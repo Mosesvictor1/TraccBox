@@ -27,6 +27,8 @@ export interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
+  refreshToken: string | null;
+  TOKEN_KEY: string | null;
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<boolean>;
@@ -59,10 +61,14 @@ const getUserFromToken = (token: string): User | null => {
 };
 
 const TOKEN_KEY = "access_token";
+const REFRESH_TOKEN = "refresh_token";
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(
     () => Cookies.get(TOKEN_KEY) || null
+  );
+  const [refreshToken, setRefreshToke] = useState<string | null>(
+    () => Cookies.get(REFRESH_TOKEN) || null
   );
   const [user, setUser] = useState<User | null>(() => {
     const storedToken = Cookies.get(TOKEN_KEY);
@@ -72,14 +78,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (token) {
+    if (token && refreshToken) {
       Cookies.set(TOKEN_KEY, token, { expires: 7 }); // 7 days expiry, adjust as needed
+      Cookies.set(REFRESH_TOKEN, refreshToken, { expires: 7 }); // 7 days expiry, adjust as needed
       setUser(getUserFromToken(token));
     } else {
       Cookies.remove(TOKEN_KEY);
       setUser(null);
     }
-  }, [token]);
+  }, [token, refreshToken]);
 
   const login = async (email: string, password: string) => {
     setLoading(true);
@@ -87,7 +94,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const res = await apiLogin({ email, password });
       setToken(res.access_token);
-      setUser(getUserFromToken(res.access_token));
+      setRefreshToke(res.refresh_token);
+      setUser(getUserFromToken(res.refresh_token));
       setLoading(false);
       return true;
     } catch (err: unknown) {
@@ -100,12 +108,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = () => {
     setToken(null);
+    setRefreshToke(null);
     setUser(null);
   };
 
   return (
     <AuthContext.Provider
-      value={{ user, token, loading, error, login, logout, setUser }}
+      value={{
+        user,
+        token,
+        TOKEN_KEY,
+        refreshToken,
+        loading,
+        error,
+        login,
+        logout,
+        setUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

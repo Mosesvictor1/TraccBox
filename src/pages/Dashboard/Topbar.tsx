@@ -2,7 +2,7 @@ import React from "react";
 import { useAuth } from "@/components/auth/AuthProvider";
 
 const Topbar: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, } = useAuth();
   return (
     <header className="fixed top-0 left-0 w-full h-16 bg-white shadow flex items-center justify-between px-6 z-30">
       <div className="font-bold text-xl text-traccbox-500">
