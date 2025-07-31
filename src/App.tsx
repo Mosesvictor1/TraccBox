@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Verification from "./pages/Verification";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import AcceptInvitation from "./pages/AcceptInvitation";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
@@ -47,6 +48,7 @@ const App = () => (
             <Route path="/verify" element={<Verification />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/accept-invitation" element={<AcceptInvitation />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />}>
                 <Route index element={<DashboardHome />} />

@@ -6,8 +6,12 @@ import {
   LoginResponse,
   ResendVerificationRequest,
   VerifyEmailParams,
+  StaffCreateRequest,
+  StaffAcceptRequest,
+  StaffPermissionUpdateRequest,
+  StaffDeleteRequest,
 } from "./types";
-
+import Cookies from "js-cookie";
 const API_BASE = import.meta.env.VITE_API_BASE;
 
 export async function registerCompany(data: RegisterRequest) {
@@ -85,4 +89,70 @@ export async function getNewToken(refresh_token: string) {
   console.log("res of New token=====", res);
   return res.data;
 }
-// access_token"
+
+// Staff Management API Functions
+
+// Get authorization header with token
+const getAuthHeaders = () => {
+  const token = Cookies.get("access_token");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  };
+};
+
+// Create new staff member
+export async function createStaff(data: StaffCreateRequest) {
+  console.log("Data Going to Backend=====", data);
+  try {
+    const res = await axios.post(
+      `${API_BASE}/onboarding/staff`,
+      data,
+      getAuthHeaders()
+    );
+    console.log("Create staff response=====", res);
+    return res.data;
+  } catch (error) {
+    console.log("Create staff ERROR response=====", error);
+    throw error;
+  }
+}
+
+// Accept staff invitation
+export async function acceptStaffInvitation(data: StaffAcceptRequest) {
+  const res = await axios.post(
+    `${API_BASE}/onboarding/staff/accept`,
+    data,
+    getAuthHeaders()
+  );
+  console.log("Accept invitation response=====", res);
+  return res.data;
+}
+
+// Update staff permissions
+export async function updateStaffPermissions(
+  data: StaffPermissionUpdateRequest
+) {
+  const res = await axios.patch(
+    `${API_BASE}/onboarding/staff/permissions`,
+    data,
+    getAuthHeaders()
+  );
+  console.log("Update permissions response=====", res);
+  return res.data;
+}
+
+// Delete staff member
+export async function deleteStaff(data: StaffDeleteRequest) {
+  const res = await axios.delete(
+    `${API_BASE}/api/v1/onboarding/staff/permissions`,
+    {
+      ...getAuthHeaders(),
+      data: data,
+    }
+  );
+  console.log("Delete staff response=====", res);
+  return res.data;
+}
