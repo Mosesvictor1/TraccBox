@@ -15,6 +15,7 @@ import { createStaff } from "@/api/auth";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useToast } from "@/components/ui/use-toast";
 import type { StaffPermissions } from "@/api/types";
+import { useNavigate } from "react-router-dom";
 
 // Zod schema for form validation
 const userFormSchema = z.object({
@@ -600,6 +601,7 @@ const UserRoles = () => {
   const [isFormValid, setIsFormValid] = useState(false);
   const { user } = useAuth();
   const { toast } = useToast();
+  const Navigate = useNavigate()
 
   const [selectedRole, setSelectedRole] = useState("admin");
 
@@ -620,6 +622,7 @@ const UserRoles = () => {
   const [loading, setLoading] = useState(false);
 
   function buildStaffPermissions(): StaffPermissions {
+    
     return {
       core_dashboard_report: {
         view_dashboard: permissions["View Dashboard"] ?? false,
@@ -742,11 +745,12 @@ const UserRoles = () => {
         title: "Success",
         description: "User created and invite sent!",
       });
-
+      Navigate("/dashboard/settings/team")
       // Reset form
       formRef.current.reset();
       setPassword("");
       setSelectedRole("admin");
+      
     } catch (e) {
       let errorMessage =
         "Failed to create user. Please check your input and try again.";

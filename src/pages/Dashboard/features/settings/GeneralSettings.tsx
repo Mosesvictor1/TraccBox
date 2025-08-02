@@ -16,7 +16,7 @@ const industries = [
 ];
 const timezones = ["Africa/Lagos (WAT)", "Africa/Accra (GMT)"];
 const currencies = ["Nigerian Naira (NGN)", "US Dollar (USD)"];
-
+// /dashboard/settings/team
 const GeneralSettings: React.FC = () => {
   const { user } = useAuth();
   const [editMode, setEditMode] = useState(false);

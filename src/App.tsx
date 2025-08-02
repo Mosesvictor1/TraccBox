@@ -17,6 +17,7 @@ import ProtectedRoute from "@/components/auth/ProtectedRoute";
 import GlobalAuthRedirect from "@/components/auth/GlobalAuthRedirect";
 import GeneralSettings from "./pages/Dashboard/features/settings/GeneralSettings";
 import UserRoles from "./pages/Dashboard/features/settings/UserRoles";
+import TeamManagment from "./pages/Dashboard/features/settings/TeamManagment";
 
 // Dashboard home content as a component
 const DashboardHome = () => (
@@ -54,6 +55,7 @@ const App = () => (
                 <Route index element={<DashboardHome />} />
                 <Route path="settings/general" element={<GeneralSettings />} />
                 <Route path="settings/roles" element={<UserRoles />} />
+                <Route path="settings/team" element={<TeamManagment/>} />
               </Route>
             </Route>
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

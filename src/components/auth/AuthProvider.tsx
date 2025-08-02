@@ -32,6 +32,7 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<boolean>;
+  staffLogin: (email: string) => Promise<boolean>;
   logout: () => void;
   setUser: (user: User | null) => void;
 }
@@ -105,7 +106,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       return false;
     }
   };
-
+  const staffLogin = async (email: string) => {
+    // Call your staff login API endpoint here
+    // Return success/failure status
+  };
   const logout = () => {
     setToken(null);
     setRefreshToke(null);
@@ -122,6 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         loading,
         error,
         login,
+        staffLogin,
         logout,
         setUser,
       }}
