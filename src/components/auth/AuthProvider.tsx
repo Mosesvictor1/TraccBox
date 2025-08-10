@@ -5,7 +5,7 @@ import React, {
   useEffect,
   ReactNode,
 } from "react";
-import { login as apiLogin } from "@/api/auth";
+import { login as apiLogin, staffLogin as apiStaffLogin } from "@/api/auth";
 import type { AxiosError } from "axios";
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
@@ -32,7 +32,12 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   login: (email: string, password: string) => Promise<boolean>;
-  staffLogin: (email: string) => Promise<boolean>;
+  staffLogin: (email: string) => Promise<{
+    success: boolean;
+    status: number;
+    needsVerification: boolean;
+  }>;
+
   logout: () => void;
   setUser: (user: User | null) => void;
 }
@@ -107,9 +112,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
   const staffLogin = async (email: string) => {
-    // Call your staff login API endpoint here
-    // Return success/failure status
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiStaffLogin({ email });
+      console.log("Staff login response:", res);
+      return { success: true, status: 200, needsVerification: false };
+    } catch (err: unknown) {
+      const axiosError = err as AxiosError<{ detail?: string }>;
+      setError(
+        typeof axiosError.response?.data?.detail === "string"
+          ? axiosError.response.data.detail
+          : JSON.stringify(axiosError.response?.data?.detail) ||
+              "Staff login failed"
+      );
+      setLoading(false);
+      return {
+        success: false,
+        status: axiosError.response?.status || 500,
+        needsVerification: false,
+      };
+    }
   };
+
   const logout = () => {
     setToken(null);
     setRefreshToke(null);

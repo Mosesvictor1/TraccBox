@@ -16,6 +16,8 @@ import * as z from "zod";
 import { Eye, EyeOff, Users, Shield } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthProvider";
+import { toast } from "sonner";
+import { AxiosError } from "axios";
 
 // Schema for Admin login
 const adminLoginSchema = z.object({
@@ -37,7 +39,10 @@ type UserType = "admin" | "staff";
 const LoginForm: React.FC = () => {
   const [userType, setUserType] = useState<UserType>("admin");
   const [showPassword, setShowPassword] = useState(false);
-  
+  const [formError, setFormError] = useState<string>("");
+
+  const [loading, setLoading] = useState(false);
+
   const adminForm = useForm<AdminLoginFormValues>({
     resolver: zodResolver(adminLoginSchema),
     defaultValues: {
@@ -55,7 +60,7 @@ const LoginForm: React.FC = () => {
   });
 
   const navigate = useNavigate();
-  const { login, staffLogin, loading, error } = useAuth(); 
+  const { login, staffLogin, error } = useAuth();
 
   const onAdminSubmit = async (values: AdminLoginFormValues) => {
     const success = await login(values.email, values.password);
@@ -64,10 +69,136 @@ const LoginForm: React.FC = () => {
     }
   };
 
+  // const onStaffSubmit = async (values: StaffLoginFormValues) => {
+  //   try {
+  //     const res = await staffLogin(values.email);
+  //     if (res && res.success) {
+  //       toast.success("Staff login successfully! Please verify your email.", {
+  //         position: "top-center",
+  //       });
+  //       navigate(`/staff-verify?email=${encodeURIComponent(values.email)}`);
+  //     } else {
+  //       throw new Error("Failed to login");
+  //     }
+  //   } catch (error: unknown) {
+  //     console.log("error==", error);
+  //     let message = "Failed to login. Please try again.";
+
+  //     if (
+  //       error &&
+  //       typeof error === "object" &&
+  //       (error as AxiosError).isAxiosError
+  //     ) {
+  //       const axiosError = error as AxiosError<{ detail?: unknown }>;
+
+  //       if (axiosError.response?.status === 422) {
+  //         if (
+  //           axiosError.response.data.detail &&
+  //           Array.isArray(axiosError.response.data.detail)
+  //         ) {
+  //           message = axiosError.response.data.detail
+  //             .map((detail) =>
+  //               typeof detail === "object" && "msg" in detail
+  //                 ? String(detail.msg)
+  //                 : JSON.stringify(detail)
+  //             )
+  //             .join(", ");
+  //         } else {
+  //           message =
+  //             typeof axiosError.response.data.detail === "string"
+  //               ? axiosError.response.data.detail
+  //               : JSON.stringify(axiosError.response.data.detail);
+  //         }
+  //       } else if (axiosError.response?.data?.detail) {
+  //         message =
+  //           typeof axiosError.response.data.detail === "string"
+  //             ? axiosError.response.data.detail
+  //             : JSON.stringify(axiosError.response.data.detail);
+  //       } else {
+  //         message = axiosError.message;
+  //       }
+  //     } else if (error instanceof Error) {
+  //       message = error.message;
+  //     }
+
+  //     setFormError(String(message));
+  //     toast.error(message, { position: "top-center" });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const normalizeErrorDetail = (detail: unknown): string => {
+    if (!detail) return "Unknown error occurred";
+
+    if (typeof detail === "string") return detail;
+
+    if (Array.isArray(detail)) {
+      return detail
+        .map((d) => {
+          if (typeof d === "string") return d;
+          if (d && typeof d === "object" && "msg" in d) {
+            return String((d as Record<string, unknown>).msg);
+          }
+          return JSON.stringify(d);
+        })
+        .join(", ");
+    }
+
+    if (typeof detail === "object") {
+      if ("msg" in (detail as Record<string, unknown>)) {
+        return String((detail as Record<string, unknown>).msg);
+      }
+      return JSON.stringify(detail);
+    }
+
+    return String(detail);
+  };
+
   const onStaffSubmit = async (values: StaffLoginFormValues) => {
-    const success = await staffLogin(values.email); // Staff login with email only
-    if (success) {
-      navigate("/staff-dashboard"); // Different dashboard for staff
+    setLoading(true);
+    try {
+      const res = await staffLogin(values.email);
+
+      if (res && res.success) {
+        toast.success("Staff login successfully! Please verify your email.", {
+          position: "top-center",
+        });
+        navigate(
+          `/staff-verify?email=${encodeURIComponent(
+            values.email
+          )}&id=${encodeURIComponent("res.id")}`
+        );
+      } else {
+        throw new Error("Failed to login");
+      }
+    } catch (error: unknown) {
+      console.log("error==", error);
+
+      let message = "Failed to login. Please try again.";
+
+      if (
+        error &&
+        typeof error === "object" &&
+        (error as AxiosError).isAxiosError
+      ) {
+        const axiosError = error as AxiosError<{ detail?: unknown }>;
+
+        if (axiosError.response?.status === 422) {
+          message = normalizeErrorDetail(axiosError.response.data?.detail);
+        } else if (axiosError.response?.data?.detail) {
+          message = normalizeErrorDetail(axiosError.response.data.detail);
+        } else {
+          message = axiosError.message || message;
+        }
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+
+      setFormError(message);
+      toast.error(message, { position: "top-center" });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -83,8 +214,18 @@ const LoginForm: React.FC = () => {
           <option value="staff">👥 Staff Login</option>
         </select>
         <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          <svg
+            className="w-4 h-4 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
           </svg>
         </div>
       </div>
@@ -93,8 +234,10 @@ const LoginForm: React.FC = () => {
 
   const AdminForm = () => (
     <Form {...adminForm}>
-      <form onSubmit={adminForm.handleSubmit(onAdminSubmit)} className="space-y-6">
-        
+      <form
+        onSubmit={adminForm.handleSubmit(onAdminSubmit)}
+        className="space-y-6"
+      >
         {/* Email */}
         <FormField
           control={adminForm.control}
@@ -152,7 +295,7 @@ const LoginForm: React.FC = () => {
         {/* Error Message */}
         {error && (
           <div className="text-red-500 text-sm text-center font-medium">
-            {error}
+            {typeof error === "string" ? error : JSON.stringify(error)}
           </div>
         )}
 
@@ -201,7 +344,10 @@ const LoginForm: React.FC = () => {
 
   const StaffForm = () => (
     <Form {...staffForm}>
-      <form onSubmit={staffForm.handleSubmit(onStaffSubmit)} className="space-y-6">
+      <form
+        onSubmit={staffForm.handleSubmit(onStaffSubmit)}
+        className="space-y-6"
+      >
         {/* Email */}
         <FormField
           control={staffForm.control}
@@ -227,8 +373,8 @@ const LoginForm: React.FC = () => {
         {/* Info Message */}
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
           <p className="text-blue-700 text-sm">
-            <span className="font-medium">Staff Login:</span> Enter your registered email address. 
-            No password required for staff access.
+            <span className="font-medium">Staff Login:</span> Enter your
+            registered email address. No password required for staff access.
           </p>
         </div>
 

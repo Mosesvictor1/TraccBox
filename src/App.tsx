@@ -18,6 +18,9 @@ import GlobalAuthRedirect from "@/components/auth/GlobalAuthRedirect";
 import GeneralSettings from "./pages/Dashboard/features/settings/GeneralSettings";
 import UserRoles from "./pages/Dashboard/features/settings/UserRoles";
 import TeamManagment from "./pages/Dashboard/features/settings/TeamManagment";
+import StaffVerification from "./pages/StaffVerification";
+import TraccBoxStaffPortal from "./pages/TraccBoxStaffPortal";
+import { useEffect } from "react";
 
 // Dashboard home content as a component
 const DashboardHome = () => (
@@ -35,6 +38,7 @@ const DashboardHome = () => (
 const queryClient = new QueryClient();
 
 const App = () => (
+  
   <AuthProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -50,6 +54,8 @@ const App = () => (
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/accept-invitation" element={<AcceptInvitation />} />
+            <Route path="/sales-rep-demo" element={<TraccBoxStaffPortal />} />
+            <Route path="/staff-verify" element={<StaffVerification />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/dashboard" element={<Dashboard />}>
                 <Route index element={<DashboardHome />} />
@@ -58,7 +64,6 @@ const App = () => (
                 <Route path="settings/team" element={<TeamManagment/>} />
               </Route>
             </Route>
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

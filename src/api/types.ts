@@ -122,6 +122,29 @@ export interface StaffAcceptRequest {
   email: string;
 }
 
+
+export interface StaffLoginRequest {
+  email: string;
+}
+
+export interface StaffLoginResponse {
+  message: string;
+  staff_id?: string;
+  verification_required?: boolean;
+}
+
+export interface StaffVerifyResponse {
+  message: string;
+  access_token?: string;
+  refresh_token?: string;
+  staff: {
+    id: string;
+    email: string;
+    name?: string;
+    permissions?: string[];
+  };
+}
+
 export interface StaffPermissionUpdateRequest {
   company_id: string;
   staff_id: string;

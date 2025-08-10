@@ -3,11 +3,14 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { acceptStaffInvitation } from "@/api/auth";
 import { useToast } from "@/components/ui/use-toast";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
+import Cookies from "js-cookie";
+import { useAuth } from "@/components/auth/AuthProvider";
 
 const AcceptInvitation = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { TOKEN_KEY } = useAuth();
   
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<'pending' | 'success' | 'error'>('pending');
@@ -24,6 +27,23 @@ const AcceptInvitation = () => {
     }
   }, [companyId, email]);
 
+  // Helper function to determine navigation path based on role
+  const getNavigationPath = (role: string): string => {
+    // Convert role to lowercase for case-insensitive comparison
+    const normalizedRole = role.toLowerCase().trim();
+    
+    // Check if the role is sales rep (handle variations)
+    if (normalizedRole === "sales rep" || 
+        normalizedRole === "sales_rep" || 
+        normalizedRole === "salesrep" ||
+        normalizedRole === "sales representative") {
+      return "/sales-rep-demo"; // Replace with your actual sales rep demo page route
+    }
+    
+    // All other roles go to dashboard
+    return "/dashboard";
+  };
+
   const handleAcceptInvitation = async () => {
     if (!companyId || !email) {
       toast({
@@ -36,7 +56,7 @@ const AcceptInvitation = () => {
 
     setLoading(true);
     try {
-      await acceptStaffInvitation({
+      const response = await acceptStaffInvitation({
         company_id: companyId,
         email: email,
       });
@@ -44,12 +64,24 @@ const AcceptInvitation = () => {
       setStatus('success');
       toast({
         title: "Success",
-        description: "Invitation accepted successfully! You can now log in to your account.",
+        description: "Invitation accepted successfully! Redirecting you...",
       });
 
-      // Redirect to login page after 3 seconds
+      // Get user role from response and determine navigation path
+      const userRole = response.user?.role || response.role || response.data?.user?.role || response.data?.role || "";
+      const navigationPath = getNavigationPath(userRole);
+      
+      console.log("User role:", userRole, "Navigating to:", navigationPath);
+
+      // Store access token only if going to dashboard (not for sales rep demo)
+      if (navigationPath === "/dashboard" && response.access_token) {
+        Cookies.set(TOKEN_KEY, response.access_token, { expires: 7 }); // 7 days
+        console.log("Access token stored for dashboard user");
+      }
+
+      // Redirect based on role after 3 seconds
       setTimeout(() => {
-        navigate('/login');
+        navigate(navigationPath);
       }, 3000);
 
     } catch (error) {
@@ -112,13 +144,13 @@ const AcceptInvitation = () => {
               Invitation Accepted!
             </h1>
             <p className="text-gray-600 mb-6">
-              You have successfully accepted the invitation. You will be redirected to the login page shortly.
+              You have successfully accepted the invitation. You will be redirected based on your role shortly.
             </p>
           </div>
           
           <div className="flex items-center justify-center text-purple-700">
             <Loader2 className="w-5 h-5 animate-spin mr-2" />
-            <span className="text-sm">Redirecting to login...</span>
+            <span className="text-sm">Redirecting...</span>
           </div>
         </div>
       </div>
@@ -151,20 +183,6 @@ const AcceptInvitation = () => {
             You've been invited to join a team on Traccbox
           </p>
         </div>
-
-        {/* <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <div className="text-sm text-gray-600 mb-2">Invitation Details:</div>
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-gray-500">Email:</span>
-              <span className="font-medium">{email}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-gray-500">Company ID:</span>
-              <span className="font-mono text-xs">{companyId}</span>
-            </div>
-          </div>
-        </div> */}
 
         <div className="space-y-4">
           <button
@@ -200,4 +218,4 @@ const AcceptInvitation = () => {
   );
 };
 
-export default AcceptInvitation; 
+export default AcceptInvitation;

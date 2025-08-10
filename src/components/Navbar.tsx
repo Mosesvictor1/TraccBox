@@ -34,7 +34,7 @@ const Navbar = () => {
             href="#"
             className="text-traccbox-500 text-2xl font-outfit font-bold"
           >
-            TraccBox<span className="text-traccbox-300">.</span>
+            <img src="assets/logo.png" alt="" className="w w-32 md:w-40" />
           </a>
         </div>
 
