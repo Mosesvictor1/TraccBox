@@ -178,7 +178,7 @@ export async function registerCompany(data: RegisterRequest) {
 }
 
 export async function login(data: LoginRequest) {
-  const res = await axios.post<LoginResponse>(`${API_BASE}/login`, data);
+  const res = await axios.post<LoginResponse>(`${API_BASE}/companies/login`, data);
   console.log("Login res==", res);
   return res.data;
 }
@@ -187,7 +187,7 @@ export async function login(data: LoginRequest) {
 export async function staffLogin(data: StaffLoginRequest) {
   try {
     const res = await axios.post<StaffLoginResponse>(
-      `${API_BASE}/login`,
+      `${API_BASE}/staff/login`,
       data
     );
 
